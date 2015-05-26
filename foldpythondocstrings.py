@@ -1,6 +1,6 @@
 import sublime
 import sublime_plugin
-
+import re
 
 def fold_comments(view):
     number_lines_to_fold = view.settings().get("fold_python_docstrings_number_of_lines", 1)
@@ -9,7 +9,7 @@ def fold_comments(view):
         if len(lines) > 1:
             region = sublime.Region(lines[0].begin(), lines[-1].end())
             text = view.substr(region).strip()
-            if text.startswith("'''") or text.startswith('"""'):
+            if re.match(r"""^[rub]{0,2}["']{3}""", text, re.IGNORECASE):
                 fold_region = sublime.Region(lines[number_lines_to_fold-1].end(), lines[-1].end() - 3)
                 view.fold(fold_region)
 
